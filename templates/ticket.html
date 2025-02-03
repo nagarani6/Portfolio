@@ -1,0 +1,479 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Hub</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 20%;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .movie {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-title {
+            padding: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+            margin: 20px 0;
+        }
+
+        .details {
+            background:white;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            display: none;
+            max-width: 800px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #e63946;
+        }
+        .button {
+            background-color: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 10px;
+        }
+
+        .button:hover {
+            background-color: #e63946;
+        }
+
+        #locationSelect, #theaterSelect, #seatSelect {
+            display: none;
+            margin-top: 20px;
+        }
+        .seat { 
+            margin: 5px; padding: 10px; }
+        .booked { background-color: red; color: white; cursor: not-allowed; }
+        .selected { background-color: green; color: white; }
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+    
+
+        .seat.selected {
+            background-color: #2a9d8f;
+        }
+
+        .seat.booked {
+            background-color: #e76f51;
+            cursor: not-allowed;
+        }
+
+        .seats-grid button {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+             
+        button, select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for all buttons */
+button:hover, select:hover {
+    background-color: #ff5733; /* Change to desired hover color */
+    color: white; /* Change text color */
+    transform: scale(1.05);
+}
+
+/* Styling for 'Select Location' Button */
+button {
+    background-color: #4CAF50; /* Initial button color */
+    color: white;
+}
+
+/* Styling for 'Select Theater' and 'Select Seats' dropdown */
+select {
+    background-color: #f1f1f1; /* Light gray background */
+    border: 2px solid #ddd; /* Border color */
+}
+
+/* Hover effect for 'Select Theater' and 'Select Seats' dropdown */
+select:hover {
+    background-color:red; /* Hover color for select elements */
+    color: white; /* Text color on hover */
+}
+
+/* Styling for the Book Seats button */
+button {
+    background-color:red; /* Blue button color */
+    color: white;
+    font-weight: bold;
+}
+
+/* Hover effect for the Book Seats button */
+button:hover {
+    background-color:green; /* Darker blue on hover */
+}
+
+/* Styling for the dropdown and select buttons */
+select {
+    background-color:green;
+    border: 1px solid #ccc;
+}
+
+/* Adjust the border color on hover */
+select:hover {
+    border-color: #999;
+}
+
+
+
+
+        .confirmation {
+            display: none;
+            background-color: #2a9d8f;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Movie Hub</h1>
+
+    <!-- Table to display movies in 2 rows -->
+    <table id="movieList">
+        <tr>
+            <td onclick="showDetails('Raj Sabha', 'https://www.youtube.com/embed/2bLY9jr8boA', 200, 'A political thriller set in modern times.', 'Thriller', 'Pawan Kalyan, Nayanthara', '9.1')">
+                <div class="movie">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqKPDAi8JMmYAEZ7FRoSW3nAwkFSsxe7JDyw&s" alt="Raj Sabha">
+                    <p class="movie-title">Raj Sabha</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Ustaad Bharath Singh', 'https://www.youtube.com/embed/oZYqzxtg4f8', 250, 'A powerful story of a legendary hero.', 'Action/Drama', 'Allu Arjun, Pooja Hegde', '9.3')">
+                <div class="movie">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiA2J4e8QXqWh3Qe_28ss6Vnt4hXE9TxsjDw&s" alt="Ustaad Bharath Singh">
+                    <p class="movie-title">Ustaad Bharath Singh</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Vishwambhara', 'https://www.youtube.com/embed/NCv-wz1nSnE', 240, 'An epic journey of courage and wisdom.', 'Adventure', 'Ravi Teja, Anushka Shetty', '8.9')">
+                <div class="movie">
+                    <img src="https://img.etimg.com/thumb/width-1200,height-1200,imgsize-9608,resizemode-75,msid-112702653/news/new-updates/vishwambhara-all-about-megastar-chiranjeevis-upcoming-movie.jpg" alt="Vishwambhara">
+                    <p class="movie-title">Vishwambhara</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Daaku Maharaaj', 'https://www.youtube.com/embed/YHaDtIhGRQo', 230, 'A gripping tale of a royal outlaw.', 'Historical/Action', 'Vikram, Trisha', '9.1')">
+                <div class="movie">
+                    <img src="https://m4news.in/wp-content/uploads/2024/11/24-10.jpg" alt="Daaku Maharaaj">
+                    <p class="movie-title">Daaku Maharaaj</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Sankranthi Ki Vastunam', 'https://youtu.be/yCkl2Z3PBs0s', 200, 'A delightful family festival drama.', 'Family', 'Naga Chaitanya, Rashmika Mandanna', '8.7')">
+                <div class="movie">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTycnQnntm31wLWHhtd9ColR2dDO3QLmleDGQ&s" alt="Sankranthi Ki Vastunam">
+                    <p class="movie-title">Sankranthi Ki Vastunam</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td onclick="showDetails('OG', 'https://www.youtube.com/embed/ylTOHIFN6jM', 250, 'An intense thriller with high stakes and action-packed drama.', 'Action/Thriller', 'Puneeth Rajkumar, Yash', '8.8')">
+                <div class="movie">
+                    <img src="https://m.media-amazon.com/images/M/MV5BNmY4YmU2ODYtZjMxZS00ZmNhLThmODgtZWYwNTQwZDMzMzA0XkEyXkFqcGc@._V1_.jpg" alt="OG">
+                    <p class="movie-title">OG</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Gamechanger', 'https://www.youtube.com/embed/zHiKFSBO_JE', 240, 'A thrilling political action movie.', 'Action/Drama', 'Ram Charan, Kiara Advani', '9.2')">
+                <div class="movie">
+                    <img src="https://cdn.123telugu.com/content/wp-content/uploads/2024/11/GameChanger-Article.jpg" alt="Gamechanger">
+                    <p class="movie-title">Gamechanger</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Mirai', 'https://www.youtube.com/embed/xnubQ829q0c', 190, 'A sci-fi adventure into the unknown.', 'Sci-Fi', 'Prabhas, Deepika Padukone', '8.8')">
+                <div class="movie">
+                    <img src="https://akm-img-a-in.tosshub.com/indiatoday/images/story/202404/teja-sajja-184253198-1x1.jpg?VersionId=eyOtphziJHDZyvsDjjCYHKDlE9a8TU2q" alt="Mirai">
+                    <p class="movie-title">Mirai</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Thandel', 'https://www.youtube.com/embed/RlRpN1Fa9Wo', 220, 'A suspense drama unraveling secrets.', 'Drama', 'Vijay Sethupathi, Samantha Akkineni', '8.7')">
+                <div class="movie">
+                    <img src="https://www.hindustantimes.com/ht-img/img/2024/03/26/1600x900/Naga_Chaitanya_Thandel_1711421542691_1711421549899.jpg" alt="Thandel">
+                    <p class="movie-title">Thandel</p>
+                </div>
+            </td>
+            <td onclick="showDetails('Hari Hara Veera Mallu', 'https://www.youtube.com/embed/4TriF7BfHyI', 170, 'Set in the 17th century, it tells the story of a legendary outlaw on a thrilling mission.', 'Historical/Action/Drama', 'Pawan Kalyan, Nidhhi Agerwal, Arjun Rampal', '8.5')">
+                <div class="movie">
+                    <img src="https://industryhit.com/t/wp-content/uploads/2024/09/HHVM-STILL-1.jpg" alt="Hari Hara Veera Mallu">
+                    <p class="movie-title">Hari Hara Veera Mallu</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div id="movieDetails" style="display: none;">
+        <h2 id="movieTitle"></h2>
+        <iframe id="trailer" frameborder="0" allowfullscreen></iframe>
+        <p><strong>Ticket Price:</strong> $<span id="ticketPrice"></span></p>
+        <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
+        <p><strong>Genre:</strong> <span id="genre"></span></p>
+        <p><strong>Cast:</strong> <span id="cast"></span></p>
+        <p><strong>Rating:</strong> <span id="rating"></span></p>
+        <button onclick="goBack()">Back to Movies</button>
+        <button onclick="showLocations()">Select Location</button>
+
+        <div id="locationSelect" style="display: none;">
+            <h2>Select Location</h2>
+            <select id="locationDropdown" onchange="showTheaters()">
+                <option value="">Select a location</option>
+                <option value="Location1">Vijayawada</option>
+                <option value="Location2">Hyderabad</option>
+                <option value="Location3">Chennai</option>
+            </select>
+        </div>
+
+        <div id="theaterSelect" style="display: none;">
+            <h2>Select Theater</h2>
+            <select id="theaterDropdown" onchange="showSlots()">
+                <option value="">Select a theater</option>
+                <option value="Theater1">PVP</option>
+                <option value="Theater2">PVR</option>
+                <option value="Theater3">Inox</option>
+                <option value="Theater2">TrendSet</option>
+                <option value="Theater3">Cinepolis</option>
+            </select>
+        </div>
+
+        <div id="slotSelect" style="display: none;">
+            <h2>Select Show Slot</h2>
+            <select id="slotDropdown" onchange="showSeats()">
+                <option value="">Select a show time</option>
+                <option value="Morning">Morning Show (10:00 AM)</option>
+                <option value="Afternoon">Afternoon Show (2:00 PM)</option>
+                <option value="Evening">Evening Show (6:00 PM)</option>
+            </select>
+        </div>
+
+        <div id="seatSelect" style="display: none;">
+            <h2>Select Seat</h2>
+            <div id="seatsGrid">
+                <!-- Seats will be dynamically generated here -->
+            </div>
+            <div id="priceDetails" style="display: none;">
+                <p><strong>Total Price:</strong> $<span id="totalPrice">0</span></p>
+                <p><strong>Discount Applied:</strong> $<span id="discount">0</span></p>
+                <p><strong>Final Price:</strong> $<span id="finalPrice">0</span></p>
+            </div>
+            <button id="bookButton" onclick="confirmBooking()" style="display: none;">Book Now</button>
+        </div>
+
+        <!-- Booking Confirmation -->
+        <div id="confirmation" class="confirmation">
+            <h3>Booking Confirmed!</h3>
+            <p>Your seats have been successfully booked.</p>
+            <p>Thank you!</p>
+        </div>
+    </div>
+
+    <script>
+        // Movie details display logic
+        function showDetails(title, trailerUrl, ticketPrice, synopsis, genre, cast, rating) {
+            document.getElementById("movieTitle").innerText = title;
+            document.getElementById("trailer").src = trailerUrl;
+            document.getElementById("ticketPrice").innerText = ticketPrice;
+            document.getElementById("synopsis").innerText = synopsis;
+            document.getElementById("genre").innerText = genre;
+            document.getElementById("cast").innerText = cast;
+            document.getElementById("rating").innerText = rating;
+
+            // Show the movie details section and hide the movie list
+            document.getElementById("movieDetails").style.display = "block";
+            document.getElementById("movieList").style.display = "none";
+        }
+
+        // Back to movies list
+        function goBack() {
+            document.getElementById("movieDetails").style.display = "none";
+            document.getElementById("movieList").style.display = "block";
+        }
+
+        // Show location selection
+        function showLocations() {
+            document.getElementById("locationSelect").style.display = "block";
+        }
+
+        // Show theater selection
+        function showTheaters() {
+            const selectedLocation = document.getElementById("locationDropdown").value;
+            if (selectedLocation) {
+                document.getElementById("theaterSelect").style.display = "block";
+            }
+        }
+
+        // Show show slots
+        function showSlots() {
+            const selectedTheater = document.getElementById("theaterDropdown").value;
+            if (selectedTheater) {
+                document.getElementById("slotSelect").style.display = "block";
+            }
+        }
+
+        // Show seat selection
+        function showSeats() {
+            const selectedSlot = document.getElementById("slotDropdown").value;
+            if (selectedSlot) {
+                const seatsGrid = document.getElementById("seatsGrid");
+                seatsGrid.innerHTML = ""; // Clear previous seats
+                document.getElementById("seatSelect").style.display = "block";
+
+                // Generate seats dynamically
+                for (let row = 0; row < 5; row++) {
+                    const rowDiv = document.createElement("div");
+                    rowDiv.style.marginBottom = "5px";
+                    for (let col = 0; col < 10; col++) {
+                        const seat = document.createElement("button");
+                        seat.innerText = `${row + 1}-${col + 1}`;
+                        seat.style.margin = "2px";
+                        seat.className = "seat";
+                        seat.onclick = function () {
+                            toggleSeatSelection(seat);
+                        };
+                        rowDiv.appendChild(seat);
+                    }
+                    seatsGrid.appendChild(rowDiv);
+                }
+            }
+        }
+
+        // Toggle seat selection
+        let selectedSeats = [];
+        function toggleSeatSelection(seat) {
+            const seatText = seat.innerText;
+
+            if (selectedSeats.includes(seatText)) {
+                selectedSeats = selectedSeats.filter((s) => s !== seatText);
+                seat.style.backgroundColor = ""; // Reset color
+            } else {
+                selectedSeats.push(seatText);
+                seat.style.backgroundColor = "lightgreen"; // Selected color
+            }
+
+            calculatePrice();
+        }
+
+        // Calculate price and apply discount
+        function calculatePrice() {
+            const ticketPrice = parseFloat(document.getElementById("ticketPrice").innerText);
+            const numSeats = selectedSeats.length;
+            const totalPrice = ticketPrice * numSeats;
+
+            let discount = 0;
+            if (numSeats > 5) {
+                discount = totalPrice * 0.1; // 10% discount
+            }
+
+            const finalPrice = totalPrice - discount;
+
+            // Update price details
+            document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
+            document.getElementById("discount").innerText = discount.toFixed(2);
+            document.getElementById("finalPrice").innerText = finalPrice.toFixed(2);
+
+            // Show the price details and book button
+            document.getElementById("priceDetails").style.display = "block";
+            document.getElementById("bookButton").style.display = numSeats > 0 ? "inline-block" : "none";
+        }
+
+        function confirmBooking() {
+            const bookButton = document.getElementById('bookButton');
+            const confirmation = document.getElementById('confirmation');
+            const selectedSeatsText = selectedSeats.join(", ");
+            const finalPrice = parseFloat(document.getElementById("finalPrice").innerText);
+
+            // Hide seat selection and Book Now button
+            document.getElementById('seatSelect').style.display = 'none';
+            bookButton.style.display = 'none';
+
+            // Display the confirmation message
+            confirmation.style.display = 'block';
+            
+            // Populate confirmation with booking details
+            confirmation.innerHTML = `
+                <h3>Booking Confirmed!</h3>
+                <p><strong>Selected Seats:</strong> ${selectedSeatsText}</p>
+                <p><strong>Final Price:</strong> $${finalPrice.toFixed(2)}</p>
+                <p>Your seats have been successfully booked. Thank you!</p>
+            `;
+        }
+    </script>
+</body>
+</html>
+ 
